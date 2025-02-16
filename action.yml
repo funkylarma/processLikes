@@ -1,0 +1,6 @@
+name: 'Like Feeds to Markdown'
+description: 'Converts the RSS feed from my Likes to Markdown files'
+author: 'Adam Chamberlin'
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
