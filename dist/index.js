@@ -58320,7 +58320,7 @@ const generateOutput = ( template, data ) => {
     .replaceAll( '[ID]', data.id || '' )
     .replaceAll( '[DATE]', format( new Date( data.date ), 'yyyy-MM-dd' ) )
     .replaceAll( '[LINK]', data.link || '' )
-    //.replaceAll( '[TITLE]', data.title.replace( /[^\w\s-]/g, '' ) || '' )
+    .replaceAll( '[TITLE]', data.title.replace( /[^\w\s-]/g, '' ) || '' )
     .replaceAll( '[COVER]', data.cover || '' )
     .replaceAll( '[MARKDOWN]', data.markdown || '' )
     .replaceAll( '[AUTHOR]', data.author || '' );
