@@ -113,6 +113,13 @@ const generateFeedMarkdown = ( template, entry ) => {
   // Extract the Letterboxd image as a cover image
   let cover = entry?.image || '';
   
+  let attachments = [ ];
+  if ( entry.attachments ) {
+    entry.attachments.forEach( attachment => {
+      attachments.push( attachment[ 'url' ] );
+    } );
+  }
+  
   // Convert the content into Markdown
   const markdown = new TurndownService( {
       codeBlockStyle: 'fenced',
@@ -126,20 +133,33 @@ const generateFeedMarkdown = ( template, entry ) => {
     entry.authors?.[ 0 ]?.[ 'name' ] ||
     entry[ 'dc:creator' ]?.[ 0 ] || 'Unknown Author';
   
-  // Final output preparation
-  return generateOutput( template, {
-    id,
-    date,
+  let output = {
+    id: id,
+    date: date,
     link: link.trim( ),
-    title,
-    cover,
-    markdown,
-    author,
-  } );
+    title: title,
+    cover: cover,
+    markdown: markdown,
+    author: author,
+  };
+  
+  if ( attachments ) {
+    output.attachments = attachments;
+  }
+  
+  // Final output preparation
+  return generateOutput( template, output );
 };
 
 // Helper function to generate the output
 const generateOutput = ( template, data ) => {
+  
+  let attachmentString = '';
+  if ( data.attachments ) {
+    data.attachments.forEach( attachment => {
+      attachmentString += "![Image](" + attachment + ")";
+    } );
+  }
   
   // Replace with the data entry
   const output = template
@@ -149,7 +169,8 @@ const generateOutput = ( template, data ) => {
     .replaceAll( '[TITLE]', data.title.replace( /[^\w\s-]/g, '' ) || '' )
     .replaceAll( '[COVER]', data.cover || '' )
     .replaceAll( '[MARKDOWN]', data.markdown || '' )
-    .replaceAll( '[AUTHOR]', data.author || '' );
+    .replaceAll( '[AUTHOR]', data.author || '' )
+    .replaceAll( '[ATTACHMENTS]', attachmentString || '' );
   
   return { output, date: data.date || '', title: data.title || '' };
 };
